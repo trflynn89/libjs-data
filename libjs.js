@@ -28,7 +28,7 @@ if (Module['ENVIRONMENT']) {
 
 // --pre-jses are emitted after the Module integration code, so that they can
 // refer to Module (if they choose; they can also define Module)
-// include: /home/runner/work/_temp/eef96715-b6bf-4bc0-a6a8-2b49f7a5f50a/emsdk-main/upstream/emscripten/src/emrun_prejs.js
+// include: /home/runner/work/_temp/364cbd92-3dc1-433d-ab4b-8f15866991cf/emsdk-main/upstream/emscripten/src/emrun_prejs.js
 /**
  * @license
  * Copyright 2013 The Emscripten Authors
@@ -49,7 +49,7 @@ if (typeof window == 'object') {
     Module['arguments'] = [];
   }
 }
-// end include: /home/runner/work/_temp/eef96715-b6bf-4bc0-a6a8-2b49f7a5f50a/emsdk-main/upstream/emscripten/src/emrun_prejs.js
+// end include: /home/runner/work/_temp/364cbd92-3dc1-433d-ab4b-8f15866991cf/emsdk-main/upstream/emscripten/src/emrun_prejs.js
 
 
 // Sometimes an existing Module object exists with properties
@@ -4076,6 +4076,14 @@ function user_display(string,length) { globalDisplayToUser(UTF8ToString(string, 
 
   var _emscripten_err = (str) => err(UTF8ToString(str));
 
+  var getHeapMax = () =>
+      // Stay one Wasm page short of 4GB: while e.g. Chrome is able to allocate
+      // full 4GB Wasm memories, the size will wrap back to 0 bytes in Wasm side
+      // for any code that deals with heap sizes, which would require special
+      // casing all heap size related code to treat 0 specially.
+      2147483648;
+  var _emscripten_get_heap_max = () => getHeapMax();
+
   var _emscripten_get_now;
       // Modern environment where performance.now() is supported:
       // N.B. a shorter form "_emscripten_get_now = performance.now;" is
@@ -4083,12 +4091,6 @@ function user_display(string,length) { globalDisplayToUser(UTF8ToString(string, 
       _emscripten_get_now = () => performance.now();
   ;
 
-  var getHeapMax = () =>
-      // Stay one Wasm page short of 4GB: while e.g. Chrome is able to allocate
-      // full 4GB Wasm memories, the size will wrap back to 0 bytes in Wasm side
-      // for any code that deals with heap sizes, which would require special
-      // casing all heap size related code to treat 0 specially.
-      2147483648;
   
   var growMemory = (size) => {
       var b = wasmMemory.buffer;
@@ -4419,6 +4421,8 @@ var wasmImports = {
   emscripten_date_now: _emscripten_date_now,
   /** @export */
   emscripten_err: _emscripten_err,
+  /** @export */
+  emscripten_get_heap_max: _emscripten_get_heap_max,
   /** @export */
   emscripten_get_now: _emscripten_get_now,
   /** @export */
@@ -4882,7 +4886,7 @@ run();
 
 // end include: postamble.js
 
-// include: /home/runner/work/_temp/eef96715-b6bf-4bc0-a6a8-2b49f7a5f50a/emsdk-main/upstream/emscripten/src/emrun_postjs.js
+// include: /home/runner/work/_temp/364cbd92-3dc1-433d-ab4b-8f15866991cf/emsdk-main/upstream/emscripten/src/emrun_postjs.js
 /**
  * @license
  * Copyright 2013 The Emscripten Authors
@@ -4978,6 +4982,6 @@ if (typeof window == "object" && (typeof ENVIRONMENT_IS_PTHREAD == 'undefined' |
     emrun_register_handlers();
   }
 }
-// end include: /home/runner/work/_temp/eef96715-b6bf-4bc0-a6a8-2b49f7a5f50a/emsdk-main/upstream/emscripten/src/emrun_postjs.js
+// end include: /home/runner/work/_temp/364cbd92-3dc1-433d-ab4b-8f15866991cf/emsdk-main/upstream/emscripten/src/emrun_postjs.js
 
-Module.SERENITYOS_COMMIT = "435b07d893217387c476dfb6c44a04eaa3325728";
+Module.SERENITYOS_COMMIT = "dd59e908a313a5c6cb0ceca92c58e1c3e6150764";
